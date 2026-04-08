@@ -10,6 +10,7 @@ export default function NoteEditor({ noteKey, title, subtitle, value, tag, onSav
   const [savedFlash, setSavedFlash] = useState(false);
   const { theme } = useTheme();
 
+
   useEffect(() => {
     setDraft(value || '');
     setDraftTag(tag || null);
@@ -97,7 +98,6 @@ export default function NoteEditor({ noteKey, title, subtitle, value, tag, onSav
         )}
       </div>
 
-      {savedFlash && <div className={`note-saved-pulse ${savedFlash ? 'is-on' : ''}`} aria-hidden="true" />}
     </div>
   );
 }

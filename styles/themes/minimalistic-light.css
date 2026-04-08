@@ -18,7 +18,6 @@
   --font-num: 'DM Sans', system-ui, sans-serif;
 
   --shadow-card: 0 2px 20px rgba(0, 0, 0, 0.06);
-  --month-transition: 200ms cubic-bezier(0.22, 1, 0.36, 1);
   --cell-hover-scale: 1.04;
 }
 
