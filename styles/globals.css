@@ -97,45 +97,62 @@ button { font: inherit; cursor: pointer; }
   border-color: var(--accent);
 }
 
-/* THEME SWITCHER */
+/* THEME SWITCHER — chevron stepper */
 .theme-switcher {
   display: inline-flex;
-  gap: 6px;
-  padding: 6px;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
   background: var(--bg-elev);
   border: 1px solid var(--border);
   border-radius: 999px;
   box-shadow: var(--shadow-card);
 }
-.theme-swatch {
+.theme-switcher__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--fg-soft);
+  transition: all 140ms ease;
+}
+.theme-switcher__arrow:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.theme-switcher__current {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px 6px 8px;
-  border: none;
+  padding: 6px 12px;
   background: transparent;
+  border: none;
   border-radius: 999px;
-  color: var(--fg-soft);
+  color: var(--fg);
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: all 180ms ease;
+  white-space: nowrap;
+  transition: background 140ms ease;
 }
-.theme-swatch__dot {
-  width: 14px; height: 14px; border-radius: 50%;
+.theme-switcher__current:hover { background: var(--accent-soft); }
+.theme-switcher__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
   border: 2px solid var(--bg-elev);
   box-shadow: 0 0 0 1px var(--border);
+  flex: 0 0 auto;
 }
-.theme-swatch.is-active {
-  background: var(--accent);
-  color: #fff;
-}
-.theme-swatch.is-active .theme-swatch__dot { border-color: rgba(255,255,255,0.5); }
-.theme-swatch__label { white-space: nowrap; }
 @media (max-width: 720px) {
-  .theme-swatch__label { display: none; }
-  .theme-swatch { padding: 8px; }
+  .theme-switcher__label { display: none; }
+  .theme-switcher__current { padding: 6px 4px; }
+  .theme-switcher__dot { width: 16px; height: 16px; }
 }
 
 /* ================================================================
@@ -503,19 +520,17 @@ button { font: inherit; cursor: pointer; }
   font-weight: 700;
 }
 
-/* range-note marker (a saved range note covering this date) */
+/* range-note marker — one stacked strip per overlapping range.
+   Strips bleed -2px into the cell gap on both sides so adjacent cells'
+   strips visually touch and a 5-day range looks like one continuous bar. */
 .cal-cell__range-strip {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 6px;
+  left: -2px;
+  right: -2px;
+  bottom: calc(6px + var(--strip-i, 0) * 6px);
   height: 4px;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--note-color, var(--accent)) 0 6px,
-    transparent 6px 10px
-  );
-  opacity: 0.55;
+  background: var(--strip-color, var(--accent));
+  opacity: 0.85;
   pointer-events: none;
   z-index: 1;
   transform-origin: left center;
@@ -524,24 +539,20 @@ button { font: inherit; cursor: pointer; }
 }
 @keyframes strip-draw {
   from { transform: scaleX(0); opacity: 0; }
-  to   { transform: scaleX(1); opacity: 0.55; }
+  to   { transform: scaleX(1); opacity: 0.85; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cal-cell__range-strip { animation: none; }
 }
-.cal-cell.has-range-note-start .cal-cell__range-strip {
+.cal-cell__range-strip.is-start {
   left: 8px;
   border-radius: 999px 0 0 999px;
-  background: var(--note-color, var(--accent));
-  opacity: 0.85;
 }
-.cal-cell.has-range-note-end .cal-cell__range-strip {
+.cal-cell__range-strip.is-end {
   right: 8px;
   border-radius: 0 999px 999px 0;
-  background: var(--note-color, var(--accent));
-  opacity: 0.85;
 }
-.cal-cell.has-range-note-start.has-range-note-end .cal-cell__range-strip {
+.cal-cell__range-strip.is-start.is-end {
   border-radius: 999px;
 }
 .cal-cell.has-range-note .cal-cell__num {
@@ -569,23 +580,31 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 1px 4px rgba(0,0,0,0.18);
 }
 
-/* dotted circle around the number for cells that have a single-date note */
-.cal-cell.has-note .cal-cell__num {
+/* Number wrapper — keeps stacked dotted rings centered on the number */
+.cal-cell__num-wrap {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
 }
-.cal-cell.has-note .cal-cell__num::before {
-  content: '';
+
+/* One dotted ring per single-date note, stacked outward and tag-colored */
+.cal-cell__note-ring {
   position: absolute;
-  inset: -5px -7px;
+  top: 50%;
+  left: 50%;
+  width: calc(22px + var(--ring-i, 0) * 6px);
+  height: calc(22px + var(--ring-i, 0) * 6px);
+  transform: translate(-50%, -50%);
+  border: 1.6px dotted var(--ring-color, var(--accent));
   border-radius: 999px;
-  border: 1.6px dotted var(--note-color, var(--accent));
   pointer-events: none;
 }
-/* hide the ring when the cell is in a live selection pill */
-.cal-cell.is-single.has-note .cal-cell__num::before,
-.cal-cell.is-range-start.has-note .cal-cell__num::before,
-.cal-cell.is-range-end.has-note .cal-cell__num::before {
+/* hide rings when the cell is part of a live selection pill */
+.cal-cell.is-single .cal-cell__note-ring,
+.cal-cell.is-range-start .cal-cell__note-ring,
+.cal-cell.is-range-end .cal-cell__note-ring {
   display: none;
 }
 

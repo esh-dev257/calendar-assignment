@@ -113,7 +113,9 @@ export default function HomePage() {
     dispatchSelection({ type: "reset" });
   };
 
-  // Map: date key -> { rangeKey, isStart, isEnd } for cells covered by a saved range note.
+  // Map: date key -> Array<{ rangeKey, startKey, endKey, isStart, isEnd }>
+  // Every overlapping range that touches the date is collected so the cell
+  // can stack one strip per range instead of last-write-wins.
   const rangeIndex = useMemo(() => {
     const map = new Map();
     Object.keys(notes).forEach((k) => {
@@ -121,14 +123,15 @@ export default function HomePage() {
       const [s, e] = k.split(":");
       const days = iterateDateKeys(s, e);
       days.forEach((d) => {
-        // Last write wins if a date is in multiple ranges.
-        map.set(d, {
+        const entry = {
           rangeKey: k,
           startKey: s,
           endKey: e,
           isStart: d === s,
           isEnd: d === e,
-        });
+        };
+        if (!map.has(d)) map.set(d, [entry]);
+        else map.get(d).push(entry);
       });
     });
     return map;
@@ -150,20 +153,17 @@ export default function HomePage() {
         openNoteFor({ kind: "date", key: existingKeys[0], baseKey: key });
         return;
       }
-      // If this date is the START or END of a saved range → open that range note.
-      // Middle dates of a range fall through to normal selection so the user can
-      // create a separate single-day note that lives "inside" the range.
-      const inRange = rangeIndex.get(key);
-      if (
-        inRange &&
-        (inRange.isStart || inRange.isEnd) &&
-        selection.phase !== "selecting"
-      ) {
+      // If this date is the START or END of any saved range → open that range note.
+      // Middle dates fall through to normal selection so users can create a
+      // separate single-day note (or another range) inside an existing range.
+      const ranges = rangeIndex.get(key) || [];
+      const cap = ranges.find((r) => r.isStart || r.isEnd);
+      if (cap && selection.phase !== "selecting") {
         dispatchSelection({ type: "reset" });
         openNoteFor({
           kind: "range",
-          startKey: inRange.startKey,
-          endKey: inRange.endKey,
+          startKey: cap.startKey,
+          endKey: cap.endKey,
         });
         return;
       }
