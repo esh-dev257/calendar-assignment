@@ -1,0 +1,42 @@
+/* THEME: Minimalistic Light
+   Swiss editorial meets luxury stationery.
+   Coral red, deep navy, warm off-white. DM Serif Display + DM Sans. */
+
+[data-theme='minimalistic-light'] {
+  --bg: #F5F0E8;
+  --bg-elev: #FFFFFF;
+  --fg: #1A2744;
+  --fg-soft: rgba(26, 39, 68, 0.55);
+  --fg-faint: rgba(26, 39, 68, 0.18);
+  --accent: #E8402A;
+  --accent-soft: rgba(232, 64, 42, 0.12);
+  --accent-strong: #c8351c;
+  --border: rgba(26, 39, 68, 0.10);
+
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-num: 'DM Sans', system-ui, sans-serif;
+
+  --shadow-card: 0 2px 20px rgba(0, 0, 0, 0.06);
+  --month-transition: 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  --cell-hover-scale: 1.04;
+}
+
+[data-theme='minimalistic-light'] .calendar-shell {
+  animation: ml-shell-in 220ms ease;
+}
+@keyframes ml-shell-in {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+[data-theme='minimalistic-light'] .month-block__abbr {
+  color: var(--fg);
+}
+
+/* Make selected-pill numbers readable on the soft accent fill */
+[data-theme='minimalistic-light'] .cal-cell.is-single .cal-cell__num,
+[data-theme='minimalistic-light'] .cal-cell.is-range-start .cal-cell__num,
+[data-theme='minimalistic-light'] .cal-cell.is-range-end .cal-cell__num {
+  color: #000;
+}

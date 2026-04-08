@@ -1,0 +1,220 @@
+/* THEME: Funky
+   Tokyo record store meets Risograph print.
+   Bold, loud, joyful chaos. Vertical month spine, monthly rotating colors,
+   Bebas Neue display + Space Mono numerals. */
+
+[data-theme='funky'] {
+  --bg: #FFE7B3;
+  --bg-elev: #FFFDF5;
+  --fg: #0E0E0E;
+  --fg-soft: rgba(14, 14, 14, 0.6);
+  --fg-faint: rgba(14, 14, 14, 0.22);
+  --accent: #FF2D87;
+  --accent-soft: rgba(255, 45, 135, 0.20);
+  --accent-strong: #d40d68;
+  --border: rgba(14, 14, 14, 0.18);
+
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-body: 'Space Mono', 'Courier New', monospace;
+  --font-num: 'Space Mono', 'Courier New', monospace;
+
+  --shadow-card: 8px 8px 0 #0E0E0E;
+  --radius: 4px;
+  --radius-lg: 6px;
+  --cell-radius: 4px;
+  --month-transition: 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --cell-hover-scale: 1.15;
+}
+
+[data-theme='funky'] body {
+  background:
+    radial-gradient(circle at 12% 18%, #FF2D8722 0 22%, transparent 40%),
+    radial-gradient(circle at 88% 80%, #00B8C422 0 22%, transparent 40%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* Monthly rotating background colors via grid index trick on the shell */
+[data-theme='funky'] .calendar-shell {
+  border: 3px solid #0E0E0E;
+  background: var(--bg-elev);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Vertical month spine */
+[data-theme='funky'] .month-spine {
+  display: block;
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: left center;
+  font-family: var(--font-display);
+  font-size: clamp(72px, 9vw, 132px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  -webkit-text-stroke: 2px #0E0E0E;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.95;
+  z-index: 0;
+  animation: funky-spine-in 600ms ease;
+}
+@keyframes funky-spine-in {
+  from { opacity: 0; transform: translateY(-40%) rotate(-90deg); }
+  to   { opacity: 0.95; transform: translateY(-50%) rotate(-90deg); }
+}
+
+[data-theme='funky'] .calendar-shell { padding-left: clamp(80px, 9vw, 130px); }
+[data-theme='funky'] .calendar-shell__left,
+[data-theme='funky'] .calendar-shell__right { position: relative; z-index: 1; }
+
+[data-theme='funky'] .month-block__abbr {
+  font-family: var(--font-display);
+  -webkit-text-stroke: 3px #0E0E0E;
+  color: #FFE94A;
+  letter-spacing: 0.02em;
+}
+[data-theme='funky'] .month-block__year {
+  font-family: var(--font-body);
+  background: #0E0E0E;
+  color: #FFE94A;
+  padding: 4px 10px;
+  letter-spacing: 0.18em;
+}
+
+[data-theme='funky'] .hero-panel__frame {
+  border: 3px solid #0E0E0E;
+  border-radius: 4px;
+  box-shadow: 6px 6px 0 var(--accent);
+}
+[data-theme='funky'] .hero-panel__overlay {
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 45, 135, 0.15) 100%);
+  mix-blend-mode: multiply;
+}
+
+[data-theme='funky'] .cal-header__month {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  letter-spacing: 0.02em;
+  color: #0E0E0E;
+}
+[data-theme='funky'] .cal-header__year {
+  background: var(--accent);
+  color: #fff;
+  padding: 4px 10px;
+}
+
+[data-theme='funky'] .cal-day-label {
+  background: #0E0E0E;
+  color: #FFE94A;
+  padding: 8px 0;
+  border-radius: 0;
+}
+
+[data-theme='funky'] .cal-cell {
+  border: 2px solid #0E0E0E;
+  background: var(--bg-elev);
+  font-family: var(--font-num);
+  font-weight: 700;
+  font-size: clamp(15px, 1.5vw, 20px);
+}
+[data-theme='funky'] .cal-cell.is-out-month { background: transparent; border-color: var(--fg-faint); }
+[data-theme='funky'] .cal-cell.is-in-month:hover .cal-cell__bg {
+  background: var(--accent);
+}
+[data-theme='funky'] .cal-cell.is-in-month:hover .cal-cell__num { color: #fff; }
+
+[data-theme='funky'] .cal-cell.is-in-range .cal-cell__bg {
+  background: #00B8C4;
+  inset: 0;
+  border-radius: 0;
+}
+[data-theme='funky'] .cal-cell.is-range-start .cal-cell__bg {
+  background: var(--accent);
+  inset: 0;
+  border-radius: 0;
+}
+[data-theme='funky'] .cal-cell.is-range-end .cal-cell__bg {
+  background: var(--accent);
+  inset: 0;
+  border-radius: 0;
+}
+[data-theme='funky'] .cal-cell.is-single .cal-cell__bg {
+  background: var(--accent);
+  inset: 0;
+  border-radius: 0;
+}
+[data-theme='funky'] .cal-cell.is-today .cal-cell__num {
+  border-color: #0E0E0E;
+  background: #FFE94A;
+}
+
+/* Notes panel - hanging note with binder ring clip */
+[data-theme='funky'] .notes-panel {
+  background: #FFFDF5;
+  border-left: 3px solid #0E0E0E;
+  transform-origin: top right;
+}
+[data-theme='funky'] .notes-panel.is-open {
+  transform: translateX(0) rotate(-1deg);
+}
+[data-theme='funky'] .notes-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.025) 0 1px, transparent 1px 4px);
+  pointer-events: none;
+}
+[data-theme='funky'] .notes-panel__clip {
+  display: block;
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 36px;
+}
+[data-theme='funky'] .notes-panel__clip span {
+  width: 22px; height: 32px;
+  background: #b0b0b0;
+  border: 2px solid #0E0E0E;
+  border-radius: 50%;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+}
+[data-theme='funky'] .notes-panel__title {
+  font-family: var(--font-display);
+  font-size: 38px;
+  letter-spacing: 0.02em;
+  -webkit-text-stroke: 1px #0E0E0E;
+  color: var(--accent);
+}
+[data-theme='funky'] .notes-panel__eyebrow { color: #00B8C4; }
+[data-theme='funky'] .note-btn { border-color: #0E0E0E; border-width: 2px; }
+[data-theme='funky'] .note-editor__textarea {
+  background: #FFFDF5;
+  border: 2px solid #0E0E0E;
+  font-family: var(--font-body);
+}
+
+[data-theme='funky'] .month-note-btn {
+  border: 2px solid #0E0E0E;
+  background: #FFE94A;
+}
+[data-theme='funky'] .cal-nav-btn { border: 2px solid #0E0E0E; }
+[data-theme='funky'] .theme-switcher { border: 2px solid #0E0E0E; box-shadow: 4px 4px 0 #0E0E0E; }
+[data-theme='funky'] .brand { color: #0E0E0E; background: #FFE94A; padding: 6px 10px; border: 2px solid #0E0E0E; }
+[data-theme='funky'] .cal-range-tooltip { background: #0E0E0E; color: #FFE94A; border-radius: 0; }
+
+@media (max-width: 720px) {
+  [data-theme='funky'] .month-spine {
+    position: static;
+    transform: none;
+    font-size: 56px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  [data-theme='funky'] .calendar-shell { padding-left: clamp(20px, 3vw, 44px); }
+}
