@@ -16,7 +16,7 @@ import {
   diffDaysInclusive,
   iterateDateKeys,
 } from "@/lib/dateUtils";
-import { migrateNotes, getNoteText } from "@/lib/noteTags";
+import { migrateNotes, getNoteText, getDateNoteKeys, nextDateNoteKey } from "@/lib/noteTags";
 
 const NOTES_KEY = "wallcal:notes";
 
@@ -143,10 +143,11 @@ export default function HomePage() {
         return;
       }
 
-      // If this date already has a saved single-date note → open it for editing.
-      if (getNoteText(notes, key)) {
+      // If this date already has one or more saved single-date notes → open the first.
+      const existingKeys = getDateNoteKeys(notes, key);
+      if (existingKeys.length > 0) {
         dispatchSelection({ type: "reset" });
-        openNoteFor({ kind: "date", key });
+        openNoteFor({ kind: "date", key: existingKeys[0], baseKey: key });
         return;
       }
       // If this date is the START or END of a saved range → open that range note.
@@ -200,12 +201,17 @@ export default function HomePage() {
 
   function openNoteFor(target) {
     if (target.kind === "date") {
-      const [y, m, d] = target.key.split("-").map((n) => parseInt(n, 10));
+      const baseKey = target.baseKey || target.key.split("#")[0];
+      const [y, m, d] = baseKey.split("-").map((n) => parseInt(n, 10));
+      const siblings = getDateNoteKeys(notes, baseKey);
+      const idx = siblings.indexOf(target.key);
+      const ordinal = siblings.length > 1 && idx >= 0 ? ` · note ${idx + 1} of ${siblings.length}` : '';
       setActiveNote({
         kind: "date",
         key: target.key,
+        baseKey,
         title: `${MONTH_NAMES[m - 1]} ${d}, ${y}`,
-        subtitle: "Single date note",
+        subtitle: `Single date note${ordinal}`,
       });
     } else if (target.kind === "range") {
       const [sy, sm, sd] = target.startKey
@@ -250,10 +256,11 @@ export default function HomePage() {
       });
       setPanelOpen(true);
     } else {
-      const [y, m] = key.split("-").map((n) => parseInt(n, 10));
+      const baseKey = key.split('#')[0];
+      const [y, m] = baseKey.split("-").map((n) => parseInt(n, 10));
       setYear(y);
       setMonth(m - 1);
-      openNoteFor({ kind: "date", key });
+      openNoteFor({ kind: "date", key, baseKey });
     }
   }, []);
 
@@ -261,6 +268,16 @@ export default function HomePage() {
     setPanelOpen(false);
     dispatchSelection({ type: "reset" });
   }, []);
+
+  // Create a fresh sibling note for the active date and switch the panel to it.
+  const handleAddAnotherForDate = () => {
+    if (!activeNote || activeNote.kind !== 'date') return;
+    const baseKey = activeNote.baseKey || activeNote.key.split('#')[0];
+    const newKey = nextDateNoteKey(notes, baseKey);
+    setNotes((prev) => ({ ...prev, [newKey]: { text: '', tag: null } }));
+    // Re-open after the state commit so subtitle reflects the new count.
+    setTimeout(() => openNoteFor({ kind: 'date', key: newKey, baseKey }), 0);
+  };
 
   const handleOpenNotesList = () => {
     setActiveNote({
@@ -295,8 +312,9 @@ export default function HomePage() {
     const monthPrefix = `${year}-${String(month + 1).padStart(2, "0")}`;
     const candidates = Object.keys(notes).filter((k) => {
       if (k === monthPrefix) return true; // month note
-      if (k.length === 10 && k.startsWith(monthPrefix)) return true; // single date
       if (k.includes(":") && k.startsWith(monthPrefix)) return true; // range starting this month
+      // single-date note (with optional "#N" suffix) starting this month
+      if (k.startsWith(monthPrefix) && /^\d{4}-\d{2}-\d{2}(#\d+)?$/.test(k)) return true;
       return false;
     });
     if (candidates.length === 0) return;
@@ -402,6 +420,8 @@ export default function HomePage() {
               onPrev={goPrev}
               onNext={goNext}
               onToday={goToday}
+              hasMonthNote={!!getNoteText(notes, monthKey(year, month))}
+              onOpenMonthNote={() => openNoteFor({ kind: "month" })}
             />
             <CalendarGrid
               year={year}
@@ -432,6 +452,7 @@ export default function HomePage() {
           onSaveNote={handleSaveNote}
           onDeleteNote={handleDeleteNote}
           onOpenNote={openNoteByKey}
+          onAddAnotherForDate={handleAddAnotherForDate}
         />
       </main>
     </>

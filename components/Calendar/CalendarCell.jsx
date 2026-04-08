@@ -1,5 +1,5 @@
 import { dateKey, compareKeys, isBetween } from '@/lib/dateUtils';
-import { normalizeNote, tagColor } from '@/lib/noteTags';
+import { normalizeNote, tagColor, getDateNoteKeys } from '@/lib/noteTags';
 
 export default function CalendarCell({
   cell,
@@ -14,12 +14,14 @@ export default function CalendarCell({
 }) {
   const key = dateKey(cell.year, cell.month, cell.day);
   const isToday = key === todayKey;
-  const dateNote = normalizeNote(notes[key]);
-  const hasNote = !!dateNote.text;
+  const dateNoteKeys = getDateNoteKeys(notes, key);
+  const noteCount = dateNoteKeys.length;
+  const hasNote = noteCount > 0;
+  const firstNote = hasNote ? normalizeNote(notes[dateNoteKeys[0]]) : { text: '', tag: null };
   const rangeNote = rangeIndex && rangeIndex.get(key);
   const rangeNoteData = rangeNote ? normalizeNote(notes[rangeNote.rangeKey]) : null;
   const noteColor = hasNote
-    ? tagColor(dateNote.tag)
+    ? tagColor(firstNote.tag)
     : rangeNoteData
       ? tagColor(rangeNoteData.tag)
       : 'var(--accent)';
@@ -64,12 +66,13 @@ export default function CalendarCell({
       onClick={() => onClickDate(key, cell)}
       onMouseEnter={() => onHoverDate(key)}
       onFocus={() => onHoverDate(key)}
-      aria-label={`${cell.year}-${cell.month + 1}-${cell.day}${hasNote ? ', has note' : ''}${rangeNote ? ', part of saved range' : ''}`}
+      aria-label={`${cell.year}-${cell.month + 1}-${cell.day}${hasNote ? `, ${noteCount} note${noteCount === 1 ? '' : 's'}` : ''}${rangeNote ? ', part of saved range' : ''}`}
       title={rangeNote ? 'Part of a saved range note' : undefined}
     >
       <span className="cal-cell__bg" aria-hidden="true" />
       {rangeNote && <span className="cal-cell__range-strip" aria-hidden="true" />}
       <span className="cal-cell__num">{cell.day}</span>
+      {noteCount > 1 && <span className="cal-cell__count" aria-hidden="true">{noteCount}</span>}
     </button>
   );
 }
