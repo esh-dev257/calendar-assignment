@@ -21,25 +21,25 @@ Then open `http://localhost:3000`.
 
 ## Features
 
-- **4 fully distinct themes** — Minimalistic Light, Minimalistic Dark, Funky, Retro. Each owns its own typography, palette, layout personality, animation language, and notes panel style. The active theme persists in `localStorage`.
-- **Wall calendar layout** — Two-panel desktop layout: hero image + month identity on the left, calendar grid on the right. The calendar is sized to fit a single viewport (no scrolling needed at 100% zoom). Stacks vertically on tablet and mobile, with a larger hero image on phones.
-- **Date range selector** — Click once to set the start, hover to preview, click a second date to set the end. A floating tooltip shows the day count. Clicking the same date twice creates a single-day note. The third click resets. Range visuals are theme-specific.
-- **Notes system** — Three kinds of notes, all in one panel:
+- **4 fully distinct themes** - Minimalistic Light, Minimalistic Dark, Funky, Retro. Each owns its own typography, palette, layout personality, animation language, and notes panel style. The active theme persists in `localStorage`.
+- **Wall calendar layout** - Two-panel desktop layout: hero image + month identity on the left, calendar grid on the right. The calendar is sized to fit a single viewport (no scrolling needed at 100% zoom). Stacks vertically on tablet and mobile, with a larger hero image on phones.
+- **Date range selector** - Click once to set the start, hover to preview, click a second date to set the end. A floating tooltip shows the day count. Clicking the same date twice creates a single-day note. The third click resets. Range visuals are theme-specific.
+- **Notes system** - Three kinds of notes, all in one panel:
   - Single-date notes keyed by `YYYY-MM-DD`
   - Range notes keyed by `YYYY-MM-DD:YYYY-MM-DD`
   - Month notes keyed by `YYYY-MM`
-- **Color-coded tags** — Each note can be tagged Work / Personal / Travel / Other (or none). The tag color drives the dotted ring around dates, the range strip, and the left border of entries in the saved-notes library.
-- **Visual indicators** — Single-date notes show a dotted ring around the date number; range notes show a striped strip with rounded pill caps at the start and end. Today gets its own animated pulse ring.
-- **Saved-notes library** — A "My Notes" button in the topbar opens a sortable list of every saved note with kind, title, tag, and a 90-char preview. Click any entry to jump to that month and edit; trash icon to delete. The same list also appears at the bottom of the panel while editing, so users can hop between notes without closing.
-- **Notes-inside-a-range** — Clicking the start or end of a saved range opens its note for editing; clicking a middle date leaves the range intact and starts a fresh selection, so users can attach a separate single-day note inside an existing range.
-- **Clear month notes** — A one-click "Clear Month Notes" button on the left panel wipes the month note plus every single-date and range-starting-this-month note, gated by a confirm dialog.
-- **Postcard export** — Any saved note can be exported as a styled PNG card via `html2canvas`. The card is rendered with theme-appropriate colors and typography, then downloaded directly. A native Canvas fallback ensures it still works if `html2canvas` is unavailable.
-- **Page-flip month transition** — Each month change triggers a direction-aware 3D flip animation (top hinge for next, bottom hinge for prev). Honors `prefers-reduced-motion`.
-- **Cell stagger animation** — Date cells fade in with a tiny per-cell delay on month change, plus a slow accent pulse on today's cell.
-- **Print stylesheet** — `@media print` hides the topbar, notes panel, hint text, and animations; switches to landscape; and converts indicators to monochrome so the calendar prints cleanly.
-- **Responsive** — Two-panel desktop, single-column tablet, full bottom-sheet mobile.
-- **Accessibility** — `aria-label`s on every date cell with full date and any context (has-note, part of saved range), labeled textareas, focusable controls, and `prefers-reduced-motion` support throughout.
-- **SVG favicon** — A small wall-calendar glyph in the brand palette, served from `/favicon.svg`.
+- **Color-coded tags** - Each note can be tagged Work / Personal / Travel / Other (or none). The tag color drives the dotted ring around dates, the range strip, and the left border of entries in the saved-notes library.
+- **Visual indicators** - Single-date notes show a dotted ring around the date number; range notes show a striped strip with rounded pill caps at the start and end. Today gets its own animated pulse ring.
+- **Saved-notes library** - A "My Notes" button in the topbar opens a sortable list of every saved note with kind, title, tag, and a 90-char preview. Click any entry to jump to that month and edit; trash icon to delete. The same list also appears at the bottom of the panel while editing, so users can hop between notes without closing.
+- **Notes-inside-a-range** - Clicking the start or end of a saved range opens its note for editing; clicking a middle date leaves the range intact and starts a fresh selection, so users can attach a separate single-day note inside an existing range.
+- **Clear month notes** - A one-click "Clear Month Notes" button on the left panel wipes the month note plus every single-date and range-starting-this-month note, gated by a confirm dialog.
+- **Postcard export** - Any saved note can be exported as a styled PNG card via `html2canvas`. The card is rendered with theme-appropriate colors and typography, then downloaded directly. A native Canvas fallback ensures it still works if `html2canvas` is unavailable.
+- **Page-flip month transition** - Each month change triggers a direction-aware 3D flip animation (top hinge for next, bottom hinge for prev). Honors `prefers-reduced-motion`.
+- **Cell stagger animation** - Date cells fade in with a tiny per-cell delay on month change, plus a slow accent pulse on today's cell.
+- **Print stylesheet** - `@media print` hides the topbar, notes panel, hint text, and animations; switches to landscape; and converts indicators to monochrome so the calendar prints cleanly.
+- **Responsive** - Two-panel desktop, single-column tablet, full bottom-sheet mobile.
+- **Accessibility** - `aria-label`s on every date cell with full date and any context (has-note, part of saved range), labeled textareas, focusable controls, and `prefers-reduced-motion` support throughout.
+- **SVG favicon** - A small wall-calendar glyph in the brand palette, served from `/favicon.svg`.
 
 ## Theme Design Rationale
 
@@ -64,7 +64,7 @@ Then open `http://localhost:3000`.
 ```
 components/
   Calendar/    CalendarHeader, CalendarGrid, CalendarCell, HeroImagePanel
-  Notes/       NotesPanel, NoteEditor, NoteIndicator
+  Notes/       NotesPanel, NoteEditor
   Theme/       ThemeContext, ThemeSwitcher
   Export/      exportNote.js
 lib/
