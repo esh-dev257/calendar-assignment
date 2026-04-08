@@ -46,10 +46,10 @@ export default function NoteEditor({ noteKey, title, subtitle, value, tag, onSav
             type="button"
             role="radio"
             aria-checked={draftTag === null}
-            className={`tag-chip ${draftTag === null ? 'is-active' : ''}`}
+            className={`tag-chip tag-chip--none ${draftTag === null ? 'is-active' : ''}`}
             onClick={() => setDraftTag(null)}
           >
-            <span className="tag-chip__dot" style={{ background: 'var(--fg-faint)' }} />
+            <span className="tag-chip__dot tag-chip__dot--none" />
             None
           </button>
           {TAGS.map((t) => (

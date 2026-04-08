@@ -26,9 +26,10 @@
 [data-theme='minimalistic-dark'] .notes-panel { background: #1C1F2A; }
 [data-theme='minimalistic-dark'] .note-editor__textarea { background: #0F1117; }
 
-/* Make selected-pill numbers readable on the soft amber fill */
+/* Selected-pill numbers stay white over the accent fill in dark mode */
 [data-theme='minimalistic-dark'] .cal-cell.is-single .cal-cell__num,
 [data-theme='minimalistic-dark'] .cal-cell.is-range-start .cal-cell__num,
 [data-theme='minimalistic-dark'] .cal-cell.is-range-end .cal-cell__num {
-  color: #000;
+  color: #fff;
 }
+

@@ -842,6 +842,12 @@ button { font: inherit; cursor: pointer; }
   border-color: var(--chip-color, var(--fg));
   color: #fff;
 }
+/* "None" chip has no tag color — use a neutral fill that contrasts in any theme */
+.tag-chip--none.is-active {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg-elev);
+}
 .tag-chip.is-active .tag-chip__dot {
   box-shadow: 0 0 0 2px rgba(255,255,255,0.6);
 }
@@ -850,6 +856,16 @@ button { font: inherit; cursor: pointer; }
   height: 9px;
   border-radius: 50%;
   display: inline-block;
+}
+/* The "None" chip uses a hollow ring instead of a colored fill */
+.tag-chip__dot--none {
+  background: transparent;
+  border: 1.5px solid var(--fg);
+  width: 10px;
+  height: 10px;
+}
+.tag-chip--none.is-active .tag-chip__dot--none {
+  border-color: var(--bg-elev);
 }
 
 .note-editor__actions {
