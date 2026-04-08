@@ -760,12 +760,25 @@ button { font: inherit; cursor: pointer; }
   border-radius: 50%;
 }
 .note-add-another {
-  align-self: flex-start;
-  margin-top: -4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 14px;
+  white-space: nowrap;
 }
 .note-btn--ghost {
   background: transparent;
   border-style: dashed;
+  color: var(--fg-soft);
+}
+.note-btn--ghost:hover:not(:disabled) {
+  border-style: solid;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* NOTE EDITOR */
@@ -843,7 +856,10 @@ button { font: inherit; cursor: pointer; }
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
 }
+.note-editor__actions .note-btn { flex: 0 1 auto; min-width: 0; }
+.note-editor__actions .note-btn--primary { flex: 0 0 auto; }
 .note-btn {
   display: inline-flex;
   align-items: center;
@@ -858,6 +874,7 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: all 140ms ease;
+  white-space: nowrap;
 }
 .note-btn:hover:not(:disabled) {
   background: var(--accent); color: #fff; border-color: var(--accent);
